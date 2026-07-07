@@ -38,6 +38,22 @@
                     </svg>
                     <span class="admin-nav__text">Orders</span>
                 </a>
+                <a class="admin-nav__link" href="{{ route('admin.products.index') }}" aria-label="Products">
+                    <svg class="admin-nav__icon" aria-hidden="true" viewBox="0 0 24 24">
+                        <path d="M6 3h12l1 6H5l1-6Z"></path>
+                        <path d="M5 9v12h14V9"></path>
+                        <path d="M9 13h6"></path>
+                    </svg>
+                    <span class="admin-nav__text">Products</span>
+                </a>
+                <a class="admin-nav__link" href="{{ route('admin.audit-trail.index') }}" aria-label="Audit Trail">
+                    <svg class="admin-nav__icon" aria-hidden="true" viewBox="0 0 24 24">
+                        <path d="M12 8v5l3 2"></path>
+                        <path d="M21 12a9 9 0 1 1-3-6.7"></path>
+                        <path d="M21 4v5h-5"></path>
+                    </svg>
+                    <span class="admin-nav__text">Audit Trail</span>
+                </a>
             </nav>
             <form class="logout-form" method="POST" action="{{ route('admin.logout') }}">
                 @csrf
@@ -74,6 +90,7 @@
                     <span>{{ $totalOrders }}</span>
                 </a>
                 @foreach ($statuses as $status)
+                    <a class="status-tab {{ $activeStatus === $status ? 'status-tab--active' : '' }}" href="{{ route('admin.orders.index', array_filter(['status' => $status, 'search' => $search])) }}">
                     <a class="status-tab {{ $activeStatus === $status ? 'status-tab--active' : '' }}" href="{{ route('admin.orders.index', ['status' => $status]) }}">
                         {{ ucfirst($status) }}
                         <span>{{ $orderCounts[$status] ?? 0 }}</span>
@@ -83,6 +100,24 @@
 
             <section class="orders-panel" aria-labelledby="orders-heading">
                 <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Search and Fulfillment</p>
+                        <h2 id="orders-heading">Orders</h2>
+                    </div>
+                    <p>{{ $orders->total() }} {{ \Illuminate\Support\Str::plural('record', $orders->total()) }}</p>
+                </div>
+
+                <form class="admin-filter-form" method="GET" action="{{ route('admin.orders.index') }}">
+                    <input type="search" name="search" value="{{ $search }}" placeholder="Search customer, contact, address, product, tracking">
+                    @if ($activeStatus)
+                        <input type="hidden" name="status" value="{{ $activeStatus }}">
+                    @endif
+                    <button class="button button--primary" type="submit">Search</button>
+                    @if ($search || $activeStatus)
+                        <a class="button button--ghost" href="{{ route('admin.orders.index') }}">Clear</a>
+                    @endif
+                </form>
+
                     <h2 id="orders-heading">Orders</h2>
                     <p>{{ $orders->total() }} {{ \Illuminate\Support\Str::plural('record', $orders->total()) }}</p>
                 </div>
@@ -94,6 +129,9 @@
                                 <th scope="col">Order</th>
                                 <th scope="col">Customer</th>
                                 <th scope="col">Contact</th>
+                                <th scope="col">Items</th>
+                                <th scope="col">Delivery Address</th>
+                                <th scope="col">Total</th>
                                 <th scope="col">Delivery Address</th>
                                 <th scope="col">Tracking</th>
                                 <th scope="col">Status</th>
@@ -104,11 +142,15 @@
                             @forelse ($orders as $order)
                                 <tr data-order-row="{{ $order->id }}">
                                     <td>
+                                        <span class="order-id">{{ $order->order_reference }}</span>
                                         <span class="order-id">#{{ str_pad((string) $order->id, 5, '0', STR_PAD_LEFT) }}</span>
                                         <span class="order-date">{{ $order->created_at->format('M d, Y') }}</span>
                                     </td>
                                     <td>{{ $order->customer_name }}</td>
                                     <td>{{ $order->contact_number }}</td>
+                                    <td>{{ $order->items->sum('quantity') ?: 'Not captured' }}</td>
+                                    <td>{{ $order->delivery_address }}</td>
+                                    <td>₱{{ number_format($order->total ?: $order->subtotal, 2) }}</td>
                                     <td>{{ $order->delivery_address }}</td>
                                     <td data-tracking-cell>{{ $order->tracking_number ?? 'Awaiting tracking' }}</td>
                                     <td>
@@ -116,6 +158,7 @@
                                     </td>
                                     <td>
                                         <div class="action-group" data-update-url="{{ route('admin.orders.update-status', $order) }}">
+                                            <a class="status-action status-action--link" href="{{ route('admin.orders.show', $order) }}">View</a>
                                             @foreach ($statuses as $status)
                                                 <button
                                                     class="status-action"
@@ -134,6 +177,7 @@
                                 </tr>
                             @empty
                                 <tr>
+                                    <td class="empty-state" colspan="9">No orders found for this view.</td>
                                     <td class="empty-state" colspan="7">No orders found for this view.</td>
                                 </tr>
                             @endforelse

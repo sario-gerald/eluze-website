@@ -36,6 +36,22 @@
                     </svg>
                     <span class="admin-nav__text">Orders</span>
                 </a>
+                <a class="admin-nav__link" href="{{ route('admin.products.index') }}" aria-label="Products">
+                    <svg class="admin-nav__icon" aria-hidden="true" viewBox="0 0 24 24">
+                        <path d="M6 3h12l1 6H5l1-6Z"></path>
+                        <path d="M5 9v12h14V9"></path>
+                        <path d="M9 13h6"></path>
+                    </svg>
+                    <span class="admin-nav__text">Products</span>
+                </a>
+                <a class="admin-nav__link" href="{{ route('admin.audit-trail.index') }}" aria-label="Audit Trail">
+                    <svg class="admin-nav__icon" aria-hidden="true" viewBox="0 0 24 24">
+                        <path d="M12 8v5l3 2"></path>
+                        <path d="M21 12a9 9 0 1 1-3-6.7"></path>
+                        <path d="M21 4v5h-5"></path>
+                    </svg>
+                    <span class="admin-nav__text">Audit Trail</span>
+                </a>
             </nav>
             <form class="logout-form" method="POST" action="{{ route('admin.logout') }}">
                 @csrf
@@ -99,6 +115,7 @@
                     @forelse ($recentOrders as $order)
                         <article class="recent-order">
                             <div>
+                                <span class="order-id">{{ $order->order_reference }}</span>
                                 <span class="order-id">#{{ str_pad((string) $order->id, 5, '0', STR_PAD_LEFT) }}</span>
                                 <p>{{ $order->customer_name }}</p>
                             </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,6 +52,12 @@ class AuthController extends Controller
             abort(403);
         }
 
+        AuditLog::record(
+            $request,
+            'admin.login',
+            "{$user->name} signed in to the admin workspace."
+        );
+
         return redirect()->intended(route('admin.orders.index'));
     }
 
@@ -59,6 +66,16 @@ class AuthController extends Controller
      */
     public function logout(Request $request): RedirectResponse
     {
+        $user = $request->user();
+
+        if ($user) {
+            AuditLog::record(
+                $request,
+                'admin.logout',
+                "{$user->name} signed out of the admin workspace."
+            );
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();
