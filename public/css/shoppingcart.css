@@ -1,0 +1,378 @@
+:root {
+    --ink: #332416;
+    --muted: #81776f;
+    --line: #e7e1dc;
+    --rose: #8b1830;
+    --cream: #fffaf4;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    color: var(--ink);
+    background: #fff;
+    font-family: "Montserrat", Arial, sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+}
+
+.cart-header {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    align-items: center;
+    height: 58px;
+    padding: 0 clamp(28px, 7vw, 110px);
+    border-bottom: 2px solid rgba(112, 82, 44, 0.3);
+    box-shadow: 0 1px 4px rgba(75, 52, 23, 0.08);
+}
+
+.cart-brand {
+    display: flex;
+    align-items: center;
+    width: 86px;
+}
+
+.cart-brand img {
+    width: 100%;
+}
+
+.cart-header nav {
+    display: flex;
+    gap: 72px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.cart-page {
+    min-height: calc(100vh - 146px);
+    padding-bottom: 120px;
+}
+
+.cart-toolbar {
+    display: grid;
+    grid-template-columns: 34px 1fr auto;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 clamp(24px, 4vw, 58px);
+    border-bottom: 1px solid #ead8c7;
+}
+
+.cart-toolbar h1 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.back-link {
+    font-size: 26px;
+    line-height: 1;
+}
+
+#edit-cart {
+    padding: 8px 0;
+    color: #60411e;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.cart-list {
+    display: grid;
+    gap: 14px;
+    width: min(calc(100% - 80px), 1180px);
+    margin: 28px auto;
+}
+
+.cart-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 34px 132px minmax(0, 1fr) 130px;
+    align-items: center;
+    gap: 24px;
+    min-height: 150px;
+    padding: 18px 28px 18px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(70, 48, 27, 0.05);
+}
+
+.item-select,
+.select-all {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.item-select input,
+.select-all input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.checkmark {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+    background: #fff;
+    border: 1px solid #9c948d;
+    border-radius: 50%;
+}
+
+input:checked + .checkmark {
+    color: #fff;
+    background: var(--rose);
+    border-color: var(--rose);
+}
+
+input:checked + .checkmark::after {
+    content: "\2713";
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.item-image {
+    display: grid;
+    place-items: center;
+    width: 126px;
+    height: 112px;
+    overflow: hidden;
+    border: 1px solid #cfc8c2;
+    border-radius: 3px;
+}
+
+.item-image img {
+    width: 112px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.item-details {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.item-details h2 {
+    margin: 0 0 22px;
+    color: #39302a;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.item-details p {
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.item-details strong {
+    color: #655b53;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.item-controls {
+    display: grid;
+    grid-template-columns: 36px 44px 36px;
+    align-items: center;
+    height: 30px;
+    overflow: hidden;
+    background: #f4f3f2;
+    border-radius: 3px;
+}
+
+.item-controls button {
+    height: 100%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.item-controls output {
+    text-align: center;
+    font-size: 12px;
+}
+
+.remove-item {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    display: none;
+    padding: 5px;
+    color: var(--rose);
+    background: transparent;
+    border: 0;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.cart-list.is-editing .remove-item {
+    display: block;
+}
+
+.empty-cart {
+    padding: 120px 24px;
+    text-align: center;
+}
+
+.empty-cart h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.empty-cart p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.empty-cart a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 190px;
+    height: 44px;
+    margin-top: 22px;
+    color: #fff;
+    background: var(--rose);
+    border-radius: 24px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.checkout-bar {
+    position: fixed;
+    z-index: 10;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 74px;
+    padding: 12px clamp(36px, 7vw, 110px);
+    background: #fbfcfd;
+    border: 1px solid #d6d6d6;
+}
+
+.select-all {
+    font-size: 13px;
+}
+
+.checkout-total {
+    display: flex;
+    align-items: center;
+    gap: 38px;
+}
+
+#cart-total {
+    min-width: 90px;
+    color: #27211d;
+    text-align: right;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+#checkout-button {
+    width: 190px;
+    height: 44px;
+    color: #fff;
+    background: var(--rose);
+    border: 0;
+    border-radius: 24px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#checkout-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+#checkout-feedback {
+    position: absolute;
+    right: clamp(36px, 7vw, 110px);
+    bottom: 4px;
+    margin: 0;
+    color: var(--rose);
+    font-size: 9px;
+}
+
+@media (max-width: 700px) {
+    .cart-header {
+        grid-template-columns: 100px 1fr;
+        padding: 0 20px;
+    }
+
+    .cart-header nav {
+        justify-content: flex-end;
+        gap: 22px;
+        font-size: 11px;
+    }
+
+    .cart-list {
+        width: calc(100% - 28px);
+    }
+
+    .cart-item {
+        grid-template-columns: 26px 82px 1fr;
+        gap: 12px;
+        min-height: 132px;
+        padding: 14px;
+    }
+
+    .item-image {
+        width: 78px;
+        height: 94px;
+    }
+
+    .item-image img {
+        width: 72px;
+        height: 80px;
+    }
+
+    .item-details h2 {
+        margin-bottom: 10px;
+        font-size: 11px;
+    }
+
+    .item-details p {
+        margin-bottom: 10px;
+        font-size: 10px;
+    }
+
+    .item-controls {
+        grid-column: 3;
+        width: 116px;
+        margin-top: -10px;
+    }
+
+    .checkout-bar {
+        padding: 12px 18px;
+    }
+
+    .checkout-total {
+        gap: 12px;
+    }
+
+    #checkout-button {
+        width: 130px;
+    }
+}
