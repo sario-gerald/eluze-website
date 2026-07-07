@@ -38,6 +38,7 @@ a {
     z-index: 10;
     display: grid;
     grid-template-columns: 180px 1fr auto;
+    grid-template-columns: 180px 1fr 72px;
     align-items: center;
     height: 54px;
     padding: 0 32px 0 78px;
@@ -470,6 +471,9 @@ a {
     justify-content: center;
     min-height: 282px;
     padding: 34px 22px 36px;
+    justify-content: flex-end;
+    min-height: 282px;
+    padding: 40px 22px 42px;
     text-align: center;
     background: rgba(255, 255, 255, 0.84);
     border: 1px solid rgba(210, 179, 132, 0.2);
@@ -488,6 +492,8 @@ a {
 
 .story-card:nth-child(3) .story-icon {
     transform: translateX(-2px);
+    margin-bottom: 24px;
+    object-fit: contain;
 }
 
 .story-card h3 {
@@ -516,6 +522,7 @@ a {
     align-items: center;
     justify-content: center;
     gap: 26px;
+    gap: 18px;
     color: #111;
 }
 
@@ -544,6 +551,9 @@ a {
     display: block;
     margin: 0 4px;
     transform: translateY(2px);
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
 }
 
 .collection-subtitle {
@@ -1252,6 +1262,9 @@ body.modal-open {
 @media (max-width: 900px) {
     .site-header {
         grid-template-columns: 120px 1fr auto;
+@media (max-width: 900px) {
+    .site-header {
+        grid-template-columns: 120px 1fr 44px;
         padding: 0 20px;
     }
 
@@ -1339,6 +1352,7 @@ body.modal-open {
     .site-header {
         height: 58px;
         grid-template-columns: 84px 1fr auto;
+        grid-template-columns: 96px 1fr 36px;
     }
 
     .brand,

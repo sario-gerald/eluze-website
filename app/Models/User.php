@@ -28,6 +28,7 @@ class User extends Authenticatable
         'barangay',
         'street',
         'landmark',
+        'email',
         'password',
         'is_admin',
         'role',

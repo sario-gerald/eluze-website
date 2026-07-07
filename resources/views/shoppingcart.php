@@ -27,6 +27,8 @@
         data-authenticated="<?= auth()->check() && ! auth()->user()->is_admin ? 'true' : 'false' ?>"
     >
         <div class="cart-toolbar" id="cart-toolbar">
+    <main class="cart-page">
+        <div class="cart-toolbar">
             <a href="/" class="back-link" aria-label="Return to shop">&#8249;</a>
             <h1>Shopping Cart</h1>
             <button type="button" id="edit-cart">Edit</button>

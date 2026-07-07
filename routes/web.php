@@ -26,6 +26,11 @@ Route::get('/', function () {
     return view('landingpage', [
         'productsByCollection' => $products,
     ]);
+use App\Http\Controllers\Admin\DashboardController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('landingpage');
 });
 
 Route::get('/shopping-cart', function () {
@@ -317,4 +322,5 @@ Route::prefix('eluze-admin')
         Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
         Route::resource('products', ProductController::class)->except(['show', 'destroy']);
         Route::get('/audit-trail', [AuditTrailController::class, 'index'])->name('audit-trail.index');
+        Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
     });

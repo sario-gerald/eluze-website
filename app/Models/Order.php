@@ -24,6 +24,10 @@ class Order extends Model
         'subtotal',
         'shipping_fee',
         'total',
+    protected $fillable = [
+        'customer_name',
+        'contact_number',
+        'delivery_address',
         'status',
         'tracking_number',
     ];

@@ -116,6 +116,7 @@
                         <article class="recent-order">
                             <div>
                                 <span class="order-id">{{ $order->order_reference }}</span>
+                                <span class="order-id">#{{ str_pad((string) $order->id, 5, '0', STR_PAD_LEFT) }}</span>
                                 <p>{{ $order->customer_name }}</p>
                             </div>
                             <span class="status-pill status-pill--{{ $order->status }}">{{ ucfirst($order->status) }}</span>

@@ -91,6 +91,7 @@
                 </a>
                 @foreach ($statuses as $status)
                     <a class="status-tab {{ $activeStatus === $status ? 'status-tab--active' : '' }}" href="{{ route('admin.orders.index', array_filter(['status' => $status, 'search' => $search])) }}">
+                    <a class="status-tab {{ $activeStatus === $status ? 'status-tab--active' : '' }}" href="{{ route('admin.orders.index', ['status' => $status]) }}">
                         {{ ucfirst($status) }}
                         <span>{{ $orderCounts[$status] ?? 0 }}</span>
                     </a>
@@ -117,6 +118,10 @@
                     @endif
                 </form>
 
+                    <h2 id="orders-heading">Orders</h2>
+                    <p>{{ $orders->total() }} {{ \Illuminate\Support\Str::plural('record', $orders->total()) }}</p>
+                </div>
+
                 <div class="table-wrap">
                     <table class="orders-table">
                         <thead>
@@ -127,6 +132,7 @@
                                 <th scope="col">Items</th>
                                 <th scope="col">Delivery Address</th>
                                 <th scope="col">Total</th>
+                                <th scope="col">Delivery Address</th>
                                 <th scope="col">Tracking</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
@@ -137,6 +143,7 @@
                                 <tr data-order-row="{{ $order->id }}">
                                     <td>
                                         <span class="order-id">{{ $order->order_reference }}</span>
+                                        <span class="order-id">#{{ str_pad((string) $order->id, 5, '0', STR_PAD_LEFT) }}</span>
                                         <span class="order-date">{{ $order->created_at->format('M d, Y') }}</span>
                                     </td>
                                     <td>{{ $order->customer_name }}</td>
@@ -144,6 +151,7 @@
                                     <td>{{ $order->items->sum('quantity') ?: 'Not captured' }}</td>
                                     <td>{{ $order->delivery_address }}</td>
                                     <td>₱{{ number_format($order->total ?: $order->subtotal, 2) }}</td>
+                                    <td>{{ $order->delivery_address }}</td>
                                     <td data-tracking-cell>{{ $order->tracking_number ?? 'Awaiting tracking' }}</td>
                                     <td>
                                         <span class="status-pill status-pill--{{ $order->status }}" data-status-pill>{{ ucfirst($order->status) }}</span>
@@ -170,6 +178,7 @@
                             @empty
                                 <tr>
                                     <td class="empty-state" colspan="9">No orders found for this view.</td>
+                                    <td class="empty-state" colspan="7">No orders found for this view.</td>
                                 </tr>
                             @endforelse
                         </tbody>

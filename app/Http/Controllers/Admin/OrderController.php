@@ -36,6 +36,11 @@ class OrderController extends Controller
                         ->orWhereHas('items', fn ($query) => $query->where('product_name', 'like', "%{$search}%"));
                 });
             })
+        ]);
+
+        $activeStatus = $validated['status'] ?? null;
+        $orders = Order::query()
+            ->status($activeStatus)
             ->latest()
             ->paginate(15)
             ->withQueryString();
@@ -109,6 +114,9 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'Order status updated.',
             'order' => $order,
+        return response()->json([
+            'message' => 'Order status updated.',
+            'order' => $order->fresh(),
         ]);
     }
 }

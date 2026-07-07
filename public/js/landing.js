@@ -406,6 +406,17 @@ if (modal) {
         feedback.textContent = "";
         modal.querySelectorAll("[data-size]").forEach((button) => {
             button.dataset.price = priceFromTrigger(trigger, button.dataset.size);
+        lastTrigger = trigger;
+        modal.dataset.category = category;
+        quantity = 1;
+        unitPrice = 850;
+        selectedSize = 10;
+        productName.textContent = name;
+        productScent.textContent = scent;
+        productInspired.textContent = inspirationByProduct[name] || `the character of ${name.toLowerCase()}`;
+        quantityOutput.textContent = quantity;
+        feedback.textContent = "";
+        modal.querySelectorAll("[data-size]").forEach((button) => {
             button.classList.toggle("is-selected", button.dataset.size === "10");
         });
         updatePrice();
@@ -454,6 +465,7 @@ if (modal) {
         button.addEventListener("click", () => {
             quantity = button.dataset.quantityAction === "increase"
                 ? Math.min(quantity + 1, currentStock, 99)
+                ? Math.min(quantity + 1, 99)
                 : Math.max(quantity - 1, 1);
             quantityOutput.textContent = quantity;
             updatePrice();
@@ -461,6 +473,7 @@ if (modal) {
     });
 
     const addCurrentItemToCart = () => {
+    modal.querySelector("#add-to-cart").addEventListener("click", () => {
         const cart = readCart();
         const itemId = `${productName.textContent}-${selectedSize}`.toLowerCase().replace(/\s+/g, "-");
         const existingItem = cart.find((item) => item.id === itemId);
@@ -494,6 +507,11 @@ if (modal) {
         const itemId = addCurrentItemToCart();
         sessionStorage.setItem("eluzeCheckoutNow", itemId);
         window.location.href = `${cartLink.href}?checkout=details`;
+    });
+
+    modal.querySelector("#buy-now").addEventListener("click", () => {
+        modal.querySelector("#add-to-cart").click();
+        window.location.href = cartLink.href;
     });
 
     document.addEventListener("keydown", (event) => {

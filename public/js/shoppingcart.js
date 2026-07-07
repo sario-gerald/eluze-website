@@ -46,6 +46,7 @@ const currency = new Intl.NumberFormat("en-PH", {
     currency: "PHP",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
 });
 
 let cart = [];
@@ -253,6 +254,7 @@ const updateSummary = () => {
     const total = selectedItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
 
     totalOutput.textContent = compactCurrency.format(total);
+    totalOutput.textContent = currency.format(total);
     checkoutButton.disabled = selectedItems.length === 0;
     selectAll.checked = cart.length > 0 && selectedItems.length === cart.length;
     selectAll.indeterminate = selectedItems.length > 0 && selectedItems.length < cart.length;
@@ -272,6 +274,7 @@ const renderCart = () => {
         fragment.querySelector("h2").textContent = `ELUZE Perfume 24hrs Long Lasting | ${item.category}`;
         fragment.querySelector(".item-variant").textContent = `${item.name} ${item.size}ml`;
         fragment.querySelector(".item-price").textContent = compactCurrency.format(item.unitPrice);
+        fragment.querySelector(".item-price").textContent = currency.format(item.unitPrice);
         fragment.querySelector("output").textContent = item.quantity;
         checkbox.checked = selectedIds.has(item.id);
         cartList.append(fragment);
@@ -527,6 +530,10 @@ placeOrder.addEventListener("click", async () => {
     placeOrder.disabled = false;
     showView("thank-you");
     window.scrollTo({ top: 0, behavior: "smooth" });
+    const count = cart
+        .filter((item) => selectedIds.has(item.id))
+        .reduce((sum, item) => sum + item.quantity, 0);
+    feedback.textContent = `${count} item${count === 1 ? "" : "s"} selected for checkout.`;
 });
 
 cart = readCart();

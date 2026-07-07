@@ -17,6 +17,7 @@
     data-customer-register-url="/customer/register"
     data-customer-logout-url="/customer/logout"
 >
+<body>
     <header class="site-header">
         <a class="brand" href="/" aria-label="Eluze home">
             <img src="<?= asset('images/eluze_logo.png') ?>" alt="Eluze">
@@ -48,6 +49,11 @@
                 </svg>
             </a>
         </div>
+        <a class="cart-link" href="<?= route('shopping-cart') ?>" aria-label="View shopping cart">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7.2 18.8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9.8 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM4 3.3h2.2l2 10.4a2 2 0 0 0 2 1.6h6.8a2 2 0 0 0 1.9-1.4l1.7-5.6H8.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
     </header>
 
     <main>
@@ -86,6 +92,18 @@
                             <p>Eluze | <?= str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) ?></p>
                         </article>
                     <?php endforeach; ?>
+                    <article class="seller-item perfume-trigger" data-name="DAYDREAM" data-scent="sweet, airy, cloudlike" tabindex="0" role="button" aria-label="Order Daydream perfume">
+                        <img class="bottle-icon" src="<?= asset('images/perfume_icon.png') ?>" alt="">
+                        <p>Eluze | 01</p>
+                    </article>
+                    <article class="seller-item perfume-trigger" data-name="LIORA" data-scent="floral, playful, delicate" tabindex="0" role="button" aria-label="Order Liora perfume">
+                        <img class="bottle-icon" src="<?= asset('images/perfume_icon.png') ?>" alt="">
+                        <p>Eluze | 02</p>
+                    </article>
+                    <article class="seller-item perfume-trigger" data-name="SOLENNE" data-scent="elegant, soft, musky" tabindex="0" role="button" aria-label="Order Solenne perfume">
+                        <img class="bottle-icon" src="<?= asset('images/perfume_icon.png') ?>" alt="">
+                        <p>Eluze | 03</p>
+                    </article>
                 </div>
             </div>
             <span class="scroll-mark" aria-hidden="true"></span>
@@ -154,6 +172,56 @@
                         <?php endif; ?>
                     </article>
                 <?php endforeach; ?>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>DAYDREAM</h3>
+                    <p>sweet, airy, cloudlike</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>LIORA</h3>
+                    <p>floral, playful, delicate</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>SOLENNE</h3>
+                    <p>elegant, soft, musky</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>LILAC CREST</h3>
+                    <p>floral, powdery, mysterious</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>AFTERLIGHT</h3>
+                    <p>sweet, airy, cloudlike</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>VELVET</h3>
+                    <p>warm, spicy, seductive</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>LUMIERE</h3>
+                    <p>delicate, crisp, pear-like</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>BLUSHINE</h3>
+                    <p>soft, powdery feminine</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>DUSK SERENADE</h3>
+                    <p>warm, vanilla, romantic</p>
+                </article>
+                <article class="product-card product-card-centered">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>SAFFRON HORIZON</h3>
+                    <p>golden, warm, radiant</p>
+                </article>
             </div>
         </section>
 
@@ -193,6 +261,36 @@
                         <?php endif; ?>
                     </article>
                 <?php endforeach; ?>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>MIDNIGHT ARC</h3>
+                    <p>smoky, woody, intense</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>ZEPHYR</h3>
+                    <p>fresh, airy, breezy</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>SCARLET WHISPER</h3>
+                    <p>fruity, vibrant, romantic</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>OCEAN VERSE</h3>
+                    <p>fresh, aquatic, clean</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>VALEUR</h3>
+                    <p>fresh, bold, aromatic</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>COBALT EMBER</h3>
+                    <p>spicy, bold, invigorating</p>
+                </article>
             </div>
         </section>
 
@@ -230,6 +328,21 @@
                         <?php endif; ?>
                     </article>
                 <?php endforeach; ?>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>CRIMSON VEIL</h3>
+                    <p>warm, amber, spicy</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>SLYVAN</h3>
+                    <p>woody, warm, sensual</p>
+                </article>
+                <article class="product-card">
+                    <span class="product-bottle"><span>ELUZE</span></span>
+                    <h3>APRICOT MUSE</h3>
+                    <p>sweet, fruity, floral</p>
+                </article>
             </div>
         </section>
     </main>
@@ -263,6 +376,7 @@
                 <div class="footer-rule"></div>
                 <div class="social-links" aria-label="Social links">
                     <a href="https://www.facebook.com/profile.php?id=100072231574264" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+                    <a href="#" aria-label="Facebook">f</a>
                     <a href="#" aria-label="Instagram">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <rect x="5" y="5" width="14" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
