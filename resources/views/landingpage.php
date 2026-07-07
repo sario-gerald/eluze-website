@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= csrf_token() ?>">
     <title>Eluze</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= asset('css/landing.css') ?>?v=<?= filemtime(public_path('css/landing.css')) ?>">
 </head>
-<body>
+<body
+    data-authenticated="<?= auth()->check() ? 'true' : 'false' ?>"
+    data-csrf-url="/customer/csrf-token"
+    data-customer-login-url="/customer/login"
+    data-customer-register-url="/customer/register"
+    data-customer-logout-url="/customer/logout"
+>
     <header class="site-header">
         <a class="brand" href="/" aria-label="Eluze home">
             <img src="<?= asset('images/eluze_logo.png') ?>" alt="Eluze">
@@ -20,11 +27,27 @@
             <a href="#story">Our Story</a>
         </nav>
 
-        <a class="cart-link" href="<?= route('shopping-cart') ?>" aria-label="View shopping cart">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7.2 18.8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9.8 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM4 3.3h2.2l2 10.4a2 2 0 0 0 2 1.6h6.8a2 2 0 0 0 1.9-1.4l1.7-5.6H8.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </a>
+        <div class="header-actions">
+            <?php if (auth()->check()): ?>
+                <div class="account-menu" id="account-menu">
+                    <button class="account-greeting" type="button" id="account-menu-button" aria-expanded="false" aria-controls="account-menu-panel">
+                        <span>Hi, <?= e(auth()->user()->first_name ?: auth()->user()->name) ?></span>
+                        <span class="account-caret" aria-hidden="true"></span>
+                    </button>
+                    <div class="account-menu__panel" id="account-menu-panel">
+                        <a href="<?= route('customer.orders') ?>">My Orders</a>
+                        <button class="account-button account-button--logout" type="button" id="logout-button">Logout</button>
+                    </div>
+                </div>
+            <?php else: ?>
+                <button class="account-button" type="button" data-open-auth>Login</button>
+            <?php endif; ?>
+            <a class="cart-link" href="<?= route('shopping-cart') ?>" aria-label="View shopping cart">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7.2 18.8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9.8 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM4 3.3h2.2l2 10.4a2 2 0 0 0 2 1.6h6.8a2 2 0 0 0 1.9-1.4l1.7-5.6H8.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
     </header>
 
     <main>
@@ -42,18 +65,27 @@
 
                 <div class="seller-panel" aria-label="Best seller products">
                     <div class="seller-title">BEST<br>SELLER</div>
-                    <article class="seller-item perfume-trigger" data-name="DAYDREAM" data-scent="sweet, airy, cloudlike" tabindex="0" role="button" aria-label="Order Daydream perfume">
-                        <img class="bottle-icon" src="<?= asset('images/perfume_icon.png') ?>" alt="">
-                        <p>Eluze | 01</p>
-                    </article>
-                    <article class="seller-item perfume-trigger" data-name="LIORA" data-scent="floral, playful, delicate" tabindex="0" role="button" aria-label="Order Liora perfume">
-                        <img class="bottle-icon" src="<?= asset('images/perfume_icon.png') ?>" alt="">
-                        <p>Eluze | 02</p>
-                    </article>
-                    <article class="seller-item perfume-trigger" data-name="SOLENNE" data-scent="elegant, soft, musky" tabindex="0" role="button" aria-label="Order Solenne perfume">
-                        <img class="bottle-icon" src="<?= asset('images/perfume_icon.png') ?>" alt="">
-                        <p>Eluze | 03</p>
-                    </article>
+                    <?php foreach (($productsByCollection['women'] ?? collect())->take(3) as $index => $product): ?>
+                        <article
+                            class="seller-item perfume-trigger<?= $product->stock <= 0 ? ' product-card--sold-out' : '' ?>"
+                            data-product-id="<?= e($product->id) ?>"
+                            data-name="<?= e($product->name) ?>"
+                            data-scent="<?= e($product->scent) ?>"
+                            data-inspiration="<?= e($product->inspiration) ?>"
+                            data-stock="<?= e($product->stock) ?>"
+                            data-price-10="<?= e($product->price_10ml) ?>"
+                            data-price-30="<?= e($product->price_30ml) ?>"
+                            data-price-50="<?= e($product->price_50ml) ?>"
+                            data-price-75="<?= e($product->price_75ml) ?>"
+                            data-price-100="<?= e($product->price_100ml) ?>"
+                            tabindex="0"
+                            role="button"
+                            aria-label="Order <?= e(ucwords(strtolower($product->name))) ?> perfume"
+                        >
+                            <img class="bottle-icon" src="<?= asset('images/perfume_icon.png') ?>" alt="">
+                            <p>Eluze | <?= str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) ?></p>
+                        </article>
+                    <?php endforeach; ?>
                 </div>
             </div>
             <span class="scroll-mark" aria-hidden="true"></span>
@@ -100,56 +132,28 @@
             <p class="collection-subtitle">Select Your Desired Perfume to Purchase</p>
 
             <div class="product-grid women-grid">
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>DAYDREAM</h3>
-                    <p>sweet, airy, cloudlike</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>LIORA</h3>
-                    <p>floral, playful, delicate</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>SOLENNE</h3>
-                    <p>elegant, soft, musky</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>LILAC CREST</h3>
-                    <p>floral, powdery, mysterious</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>AFTERLIGHT</h3>
-                    <p>sweet, airy, cloudlike</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>VELVET</h3>
-                    <p>warm, spicy, seductive</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>LUMIERE</h3>
-                    <p>delicate, crisp, pear-like</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>BLUSHINE</h3>
-                    <p>soft, powdery feminine</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>DUSK SERENADE</h3>
-                    <p>warm, vanilla, romantic</p>
-                </article>
-                <article class="product-card product-card-centered">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>SAFFRON HORIZON</h3>
-                    <p>golden, warm, radiant</p>
-                </article>
+                <?php foreach (($productsByCollection['women'] ?? collect()) as $product): ?>
+                    <article
+                        class="product-card<?= $product->stock <= 0 ? ' product-card--sold-out' : '' ?>"
+                        data-product-id="<?= e($product->id) ?>"
+                        data-name="<?= e($product->name) ?>"
+                        data-scent="<?= e($product->scent) ?>"
+                        data-inspiration="<?= e($product->inspiration) ?>"
+                        data-stock="<?= e($product->stock) ?>"
+                        data-price-10="<?= e($product->price_10ml) ?>"
+                        data-price-30="<?= e($product->price_30ml) ?>"
+                        data-price-50="<?= e($product->price_50ml) ?>"
+                        data-price-75="<?= e($product->price_75ml) ?>"
+                        data-price-100="<?= e($product->price_100ml) ?>"
+                    >
+                        <span class="product-bottle"><span>ELUZE</span></span>
+                        <h3><?= e($product->name) ?></h3>
+                        <p><?= e($product->scent) ?></p>
+                        <?php if ($product->stock <= 0): ?>
+                            <span class="stock-note">Out of stock</span>
+                        <?php endif; ?>
+                    </article>
+                <?php endforeach; ?>
             </div>
         </section>
 
@@ -167,36 +171,28 @@
             <p class="collection-subtitle">Select Your Desired Perfume to Purchase</p>
 
             <div class="product-grid men-grid">
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>MIDNIGHT ARC</h3>
-                    <p>smoky, woody, intense</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>ZEPHYR</h3>
-                    <p>fresh, airy, breezy</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>SCARLET WHISPER</h3>
-                    <p>fruity, vibrant, romantic</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>OCEAN VERSE</h3>
-                    <p>fresh, aquatic, clean</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>VALEUR</h3>
-                    <p>fresh, bold, aromatic</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>COBALT EMBER</h3>
-                    <p>spicy, bold, invigorating</p>
-                </article>
+                <?php foreach (($productsByCollection['men'] ?? collect()) as $product): ?>
+                    <article
+                        class="product-card<?= $product->stock <= 0 ? ' product-card--sold-out' : '' ?>"
+                        data-product-id="<?= e($product->id) ?>"
+                        data-name="<?= e($product->name) ?>"
+                        data-scent="<?= e($product->scent) ?>"
+                        data-inspiration="<?= e($product->inspiration) ?>"
+                        data-stock="<?= e($product->stock) ?>"
+                        data-price-10="<?= e($product->price_10ml) ?>"
+                        data-price-30="<?= e($product->price_30ml) ?>"
+                        data-price-50="<?= e($product->price_50ml) ?>"
+                        data-price-75="<?= e($product->price_75ml) ?>"
+                        data-price-100="<?= e($product->price_100ml) ?>"
+                    >
+                        <span class="product-bottle"><span>ELUZE</span></span>
+                        <h3><?= e($product->name) ?></h3>
+                        <p><?= e($product->scent) ?></p>
+                        <?php if ($product->stock <= 0): ?>
+                            <span class="stock-note">Out of stock</span>
+                        <?php endif; ?>
+                    </article>
+                <?php endforeach; ?>
             </div>
         </section>
 
@@ -212,21 +208,28 @@
             <p class="collection-subtitle">Select Your Desired Perfume to Purchase</p>
 
             <div class="product-grid unisex-grid">
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>CRIMSON VEIL</h3>
-                    <p>warm, amber, spicy</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>SLYVAN</h3>
-                    <p>woody, warm, sensual</p>
-                </article>
-                <article class="product-card">
-                    <span class="product-bottle"><span>ELUZE</span></span>
-                    <h3>APRICOT MUSE</h3>
-                    <p>sweet, fruity, floral</p>
-                </article>
+                <?php foreach (($productsByCollection['unisex'] ?? collect()) as $product): ?>
+                    <article
+                        class="product-card<?= $product->stock <= 0 ? ' product-card--sold-out' : '' ?>"
+                        data-product-id="<?= e($product->id) ?>"
+                        data-name="<?= e($product->name) ?>"
+                        data-scent="<?= e($product->scent) ?>"
+                        data-inspiration="<?= e($product->inspiration) ?>"
+                        data-stock="<?= e($product->stock) ?>"
+                        data-price-10="<?= e($product->price_10ml) ?>"
+                        data-price-30="<?= e($product->price_30ml) ?>"
+                        data-price-50="<?= e($product->price_50ml) ?>"
+                        data-price-75="<?= e($product->price_75ml) ?>"
+                        data-price-100="<?= e($product->price_100ml) ?>"
+                    >
+                        <span class="product-bottle"><span>ELUZE</span></span>
+                        <h3><?= e($product->name) ?></h3>
+                        <p><?= e($product->scent) ?></p>
+                        <?php if ($product->stock <= 0): ?>
+                            <span class="stock-note">Out of stock</span>
+                        <?php endif; ?>
+                    </article>
+                <?php endforeach; ?>
             </div>
         </section>
     </main>
@@ -259,7 +262,7 @@
                 <p>Follow us to receive exclusive offers and news of our latest creations.</p>
                 <div class="footer-rule"></div>
                 <div class="social-links" aria-label="Social links">
-                    <a href="#" aria-label="Facebook">f</a>
+                    <a href="https://www.facebook.com/profile.php?id=100072231574264" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
                     <a href="#" aria-label="Instagram">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <rect x="5" y="5" width="14" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -314,6 +317,53 @@
                 <button type="button" class="order-action order-action--primary" id="buy-now">BUY NOW</button>
             </div>
             <p class="order-feedback" id="order-feedback" aria-live="polite"></p>
+        </section>
+    </div>
+
+    <div class="auth-modal" id="auth-modal" hidden>
+        <button class="auth-modal__backdrop" type="button" aria-label="Close login and register" data-close-auth></button>
+        <section class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+            <button class="auth-dialog__close" type="button" aria-label="Close login and register" data-close-auth>&times;</button>
+            <div class="auth-tabs" role="tablist" aria-label="Account options">
+                <button type="button" class="is-active" data-auth-tab="login">Login</button>
+                <button type="button" data-auth-tab="register">Register</button>
+            </div>
+
+            <h2 id="auth-title">Welcome to Eluze</h2>
+            <p class="auth-intro" id="auth-intro">Sign in to autofill checkout details when you order.</p>
+
+            <form class="auth-form" id="login-form" data-auth-panel="login">
+                <input type="email" name="email" placeholder="Email address" autocomplete="email" required>
+                <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+                <button type="submit">LOGIN</button>
+            </form>
+
+            <form class="auth-form auth-form--register" id="register-form" data-auth-panel="register" hidden>
+                <div class="auth-grid">
+                    <input type="text" name="surname" placeholder="Surname" autocomplete="family-name" required>
+                    <input type="text" name="firstName" placeholder="First Name" autocomplete="given-name" required>
+                    <input type="tel" name="contact" placeholder="Contact number" autocomplete="tel" required>
+                    <input type="email" name="email" placeholder="Email address" autocomplete="email" required>
+                    <input type="password" name="password" placeholder="Password" autocomplete="new-password" required>
+                </div>
+                <p class="auth-section-label">Delivery details for faster checkout</p>
+                <div class="auth-grid auth-grid--address">
+                    <select name="region">
+                        <option value="">Region</option>
+                    </select>
+                    <select name="city">
+                        <option value="">City / Municipality</option>
+                    </select>
+                    <select name="barangay">
+                        <option value="">Barangay</option>
+                    </select>
+                    <input type="text" name="street" placeholder="Street" autocomplete="street-address">
+                    <input type="text" name="landmark" placeholder="Nearest Landmark (Optional)">
+                </div>
+                <button type="submit">REGISTER</button>
+            </form>
+
+            <p class="auth-feedback" id="auth-feedback" aria-live="polite"></p>
         </section>
     </div>
 
